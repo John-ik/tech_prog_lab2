@@ -9,16 +9,17 @@
 
 namespace {
 
-void printMenu() {
-    std::cout << "\n1. Показать все поезда\n"
-                 "2. Добавить поезд в конец\n"
-                 "3. Добавить поезд на позицию\n"
-                 "4. Редактировать поезд\n"
-                 "5. Удалить поезд\n"
-                 "6. Отсортировать по пункту назначения\n"
-                 "7. Поезда, отправляющиеся после времени\n"
-                 "0. Выход\n"
-                 "Выбор: ";
+void printHelp() {
+    std::cout << "\nКоманды:\n"
+                 "  p - показать все поезда\n"
+                 "  a - добавить поезд в конец\n"
+                 "  i - добавить поезд на позицию\n"
+                 "  e - редактировать поезд\n"
+                 "  d - удалить поезд\n"
+                 "  s - отсортировать по пункту назначения\n"
+                 "  t - поезда, отправляющиеся после времени\n"
+                 "  h - помощь\n"
+                 "  q - выход\n";
 }
 
 // Позиция от 1 до max. Возвращает индекс с нуля.
@@ -88,40 +89,46 @@ void printAfterTime(const TrainList &list) {
 
 int main() {
     TrainList list;
+    std::cout << "Введите команду (h - помощь)\n";
     while (true) {
-        printMenu();
+        std::cout << "> ";
         std::string line;
         if (!std::getline(std::cin, line))
             break;
 
         try {
-            switch (parseInt(line, "пункт меню")) {
-            case 0:
+            const char command = line.size() == 1 ? line[0] : '\0';
+            switch (command) {
+            case 'q':
                 return 0;
-            case 1:
+            case 'p':
                 printAll(list);
                 break;
-            case 2:
+            case 'a':
                 addToEnd(list);
                 break;
-            case 3:
+            case 'i':
                 addAtPosition(list);
                 break;
-            case 4:
+            case 'e':
                 editTrain(list);
                 break;
-            case 5:
+            case 'd':
                 removeTrain(list);
                 break;
-            case 6:
+            case 's':
                 list.sortByDestination();
                 printAll(list);
                 break;
-            case 7:
+            case 't':
                 printAfterTime(list);
                 break;
+            case 'h':
+                printHelp();
+                break;
             default:
-                std::cout << "Нет пункта меню: " << line << '\n';
+                std::cout << "Ошибка: неизвестная команда \"" << line << "\"\n";
+                printHelp();
             }
         } catch (const TrainError &e) {
             std::cout << "Ошибка: " << e.what() << '\n';
